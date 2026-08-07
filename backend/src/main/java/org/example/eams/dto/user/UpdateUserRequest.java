@@ -1,4 +1,4 @@
-package org.example.eams.dto;
+package org.example.eams.dto.user;
 
 import jakarta.validation.constraints.NotBlank;
 import jakarta.validation.constraints.NotEmpty;
@@ -7,15 +7,7 @@ import jakarta.validation.constraints.Size;
 
 import java.util.List;
 
-public record CreateUserRequest(
-        @NotBlank(message = "账号不能为空")
-        @Size(max = 50, message = "账号不能超过50个字符")
-        String username,
-
-        @NotBlank(message = "密码不能为空")
-        @Size(min = 6, max = 50, message = "密码长度必须为6到50个字符")
-        String password,
-
+public record UpdateUserRequest(
         @NotBlank(message = "昵称不能为空")
         @Size(max = 50, message = "昵称不能超过50个字符")
         String nickname,

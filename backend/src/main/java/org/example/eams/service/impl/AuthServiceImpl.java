@@ -1,7 +1,7 @@
 package org.example.eams.service.impl;
 
 import lombok.RequiredArgsConstructor;
-import org.example.eams.dto.LoginRequest;
+import org.example.eams.dto.auth.LoginRequest;
 import org.example.eams.entity.SysUser;
 import org.example.eams.enums.ErrorCode;
 import org.example.eams.enums.UserStatus;

@@ -2,8 +2,8 @@ package org.example.eams.service.impl;
 
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import lombok.RequiredArgsConstructor;
-import org.example.eams.dto.CreateDepartmentRequest;
-import org.example.eams.dto.UpdateDepartmentRequest;
+import org.example.eams.dto.department.CreateDepartmentRequest;
+import org.example.eams.dto.department.UpdateDepartmentRequest;
 import org.example.eams.entity.SysDepartment;
 import org.example.eams.entity.SysUser;
 import org.example.eams.enums.ErrorCode;

@@ -3,11 +3,11 @@ package org.example.eams.service.impl;
 import com.baomidou.mybatisplus.core.conditions.query.LambdaQueryWrapper;
 import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
-import org.example.eams.dto.CreateUserRequest;
-import org.example.eams.dto.ResetPasswordRequest;
-import org.example.eams.dto.UpdateUserRequest;
-import org.example.eams.dto.UserQuery;
-import org.example.eams.dto.UserStatusRequest;
+import org.example.eams.dto.user.CreateUserRequest;
+import org.example.eams.dto.user.ResetPasswordRequest;
+import org.example.eams.dto.user.UpdateUserRequest;
+import org.example.eams.dto.user.UserQuery;
+import org.example.eams.dto.user.UserStatusRequest;
 import org.example.eams.entity.SysDepartment;
 import org.example.eams.entity.SysUser;
 import org.example.eams.enums.ErrorCode;
@@ -77,7 +77,7 @@ public class UserServiceImpl implements UserService {
                 .distinct()
                 .toList();
 
-        Map<Long, String> departmentNames = departmentMapper.selectBatchIds(departmentIds)
+        Map<Long, String> departmentNames = departmentMapper.selectByIds(departmentIds)
                 .stream()
                 .collect(Collectors.toMap(SysDepartment::getId, SysDepartment::getName));
 

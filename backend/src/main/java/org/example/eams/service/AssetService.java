@@ -1,0 +1,19 @@
+package org.example.eams.service;
+
+import org.example.eams.dto.asset.AssetQuery;
+import org.example.eams.dto.asset.AssetSaveRequest;
+import org.example.eams.vo.AssetVo;
+import org.example.eams.vo.PageResult;
+
+public interface AssetService {
+
+    PageResult<AssetVo> page(AssetQuery query);
+
+    AssetVo getById(Long id);
+
+    Long create(AssetSaveRequest req);
+
+    void update(Long id, AssetSaveRequest req);
+
+    void delete(Long id);
+}

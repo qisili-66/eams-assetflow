@@ -1,4 +1,4 @@
-package org.example.eams.dto;
+package org.example.eams.dto.user;
 
 import jakarta.validation.constraints.NotNull;
 import org.example.eams.enums.UserStatus;

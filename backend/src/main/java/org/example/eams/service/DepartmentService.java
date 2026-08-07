@@ -1,7 +1,7 @@
 package org.example.eams.service;
 
-import org.example.eams.dto.CreateDepartmentRequest;
-import org.example.eams.dto.UpdateDepartmentRequest;
+import org.example.eams.dto.department.CreateDepartmentRequest;
+import org.example.eams.dto.department.UpdateDepartmentRequest;
 import org.example.eams.vo.DepartmentTreeVo;
 
 import java.util.List;

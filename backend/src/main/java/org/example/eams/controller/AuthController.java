@@ -4,7 +4,7 @@ package org.example.eams.controller;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.example.eams.common.Result;
-import org.example.eams.dto.LoginRequest;
+import org.example.eams.dto.auth.LoginRequest;
 import org.example.eams.service.AuthService;
 import org.example.eams.vo.CurrentUserVo;
 import org.example.eams.vo.LoginResponse;
