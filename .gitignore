@@ -45,6 +45,9 @@ tmp/
 temp/
 uploads/
 
+# Local development notes
+DEVELOPMENT_PROGRESS.md
+
 # Environment files and local secrets
 .env
 .env.local
