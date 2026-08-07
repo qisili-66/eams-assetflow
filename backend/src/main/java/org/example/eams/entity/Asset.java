@@ -40,6 +40,12 @@ public class Asset {
 
     private String remark;
 
+    @TableField("scrap_reason")
+    private String scrapReason;
+
+    @TableField("scrapped_at")
+    private LocalDateTime scrappedAt;
+
     @TableField("created_at")
     private LocalDateTime createdAt;
 

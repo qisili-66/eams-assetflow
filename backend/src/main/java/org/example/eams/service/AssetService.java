@@ -2,6 +2,7 @@ package org.example.eams.service;
 
 import org.example.eams.dto.asset.AssetQuery;
 import org.example.eams.dto.asset.AssetSaveRequest;
+import org.example.eams.dto.asset.ScrapAssetRequest;
 import org.example.eams.vo.AssetVo;
 import org.example.eams.vo.PageResult;
 
@@ -16,4 +17,6 @@ public interface AssetService {
     void update(Long id, AssetSaveRequest req);
 
     void delete(Long id);
+
+    void scrap(Long id, ScrapAssetRequest req);
 }

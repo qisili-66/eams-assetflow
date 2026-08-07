@@ -5,6 +5,7 @@ import com.baomidou.mybatisplus.extension.plugins.pagination.Page;
 import lombok.RequiredArgsConstructor;
 import org.example.eams.dto.asset.AssetQuery;
 import org.example.eams.dto.asset.AssetSaveRequest;
+import org.example.eams.dto.asset.ScrapAssetRequest;
 import org.example.eams.entity.Asset;
 import org.example.eams.entity.SysUser;
 import org.example.eams.enums.AssetStatus;
@@ -18,6 +19,7 @@ import org.example.eams.vo.PageResult;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 
+import java.time.LocalDateTime;
 import java.util.Collection;
 import java.util.List;
 import java.util.Map;
@@ -79,6 +81,19 @@ public class AssetServiceImpl implements AssetService {
             throw new BusinessException(ErrorCode.BUSINESS_ERROR, "只有空闲资产可以删除");
         }
         assetMapper.deleteById(id);
+    }
+
+    @Override
+    public void scrap(Long id, ScrapAssetRequest req) {
+        Asset asset = findAsset(id);
+        if (asset.getStatus() != AssetStatus.FREE) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "只有空闲资产可以报废");
+        }
+
+        asset.setStatus(AssetStatus.SCRAP);
+        asset.setScrapReason(req.reason().trim());
+        asset.setScrappedAt(LocalDateTime.now());
+        assetMapper.updateById(asset);
     }
 
     private LambdaQueryWrapper<Asset> buildQuery(AssetQuery query) {
@@ -155,6 +170,8 @@ public class AssetServiceImpl implements AssetService {
                 asset.getImageUrl(),
                 asset.getRemark(),
                 userNames.get(asset.getCurrentUserId()),
+                asset.getScrapReason(),
+                asset.getScrappedAt(),
                 asset.getCreatedAt()
         );
     }

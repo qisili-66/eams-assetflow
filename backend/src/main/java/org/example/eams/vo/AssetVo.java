@@ -17,6 +17,8 @@ public record AssetVo(
         String imageUrl,
         String remark,
         String currentUserName,
+        String scrapReason,
+        LocalDateTime scrappedAt,
         LocalDateTime createdAt
 ) {
 }
