@@ -11,14 +11,9 @@ import org.example.eams.vo.UserPageVo;
 public interface UserService {
 
     PageResult<UserPageVo> page(UserQuery query);
-
     UserPageVo getById(Long id);
-
     Long create(CreateUserRequest req);
-
     void update(Long id, UpdateUserRequest req);
-
     void updateStatus(Long id, UserStatusRequest req);
-
     void resetPassword(Long id, ResetPasswordRequest req);
 }

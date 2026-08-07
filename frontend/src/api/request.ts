@@ -83,6 +83,17 @@ export function put<T>(
         url, method: 'put', data, ...config
     });
 }
+
+export function patch<T>(
+    url: string,
+    data?: unknown,
+    config?: AxiosRequestConfig
+): Promise<T> {
+    return send<T>({
+        url, method: 'patch', data, ...config
+    });
+}
+
 export function del<T>(
     url: string,
     config?: AxiosRequestConfig

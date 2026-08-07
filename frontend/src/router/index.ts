@@ -9,6 +9,7 @@ const DashboardView = () => import('../views/dashboard/DashboardView.vue')
 const PlaceholderView = () => import('../views/common/PlaceholderView.vue')
 const NotFoundView = () => import('../views/common/NotFoundView.vue')
 const DepartmentView = () => import('../views/departments/DepartmentView.vue')
+const UserView = () => import('../views/users/UserView.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -31,8 +32,7 @@ const routes: RouteRecordRaw[] = [
       {
         path: 'users',
         name: 'users',
-        component: PlaceholderView,
-        props:{title:'用户管理'},
+        component: UserView,
         meta:{title:'用户管理',requiresAuth: true, roles: ['ADMIN']},
       },
         {
