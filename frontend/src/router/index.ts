@@ -10,6 +10,7 @@ const PlaceholderView = () => import('../views/common/PlaceholderView.vue')
 const NotFoundView = () => import('../views/common/NotFoundView.vue')
 const DepartmentView = () => import('../views/departments/DepartmentView.vue')
 const UserView = () => import('../views/users/UserView.vue')
+const AssetView = () => import('../views/assets/AssetView.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -45,8 +46,7 @@ const routes: RouteRecordRaw[] = [
         {
         path: 'assets',
         name: 'assets',
-        component: PlaceholderView,
-         props:{title:'资产管理'},
+        component: AssetView,
         meta:{title:'资产管理',requiresAuth: true}
       },
         {

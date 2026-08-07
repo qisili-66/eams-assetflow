@@ -169,7 +169,9 @@ public class AssetServiceImpl implements AssetService {
                 asset.getStatus(),
                 asset.getImageUrl(),
                 asset.getRemark(),
-                userNames.get(asset.getCurrentUserId()),
+                asset.getCurrentUserId() == null
+                        ? null
+                        : userNames.get(asset.getCurrentUserId()),
                 asset.getScrapReason(),
                 asset.getScrappedAt(),
                 asset.getCreatedAt()
