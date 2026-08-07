@@ -6,17 +6,22 @@ import lombok.RequiredArgsConstructor;
 import org.example.eams.dto.asset.AssetQuery;
 import org.example.eams.dto.asset.AssetSaveRequest;
 import org.example.eams.dto.asset.ScrapAssetRequest;
+import org.example.eams.dto.holding.ReturnAssetRequest;
 import org.example.eams.entity.Asset;
+import org.example.eams.entity.AssetHolding;
 import org.example.eams.entity.SysUser;
 import org.example.eams.enums.AssetStatus;
 import org.example.eams.enums.ErrorCode;
+import org.example.eams.enums.HoldingStatus;
 import org.example.eams.exception.BusinessException;
 import org.example.eams.mapper.AssetMapper;
+import org.example.eams.mapper.AssetHoldingMapper;
 import org.example.eams.mapper.SysUserMapper;
 import org.example.eams.service.AssetService;
 import org.example.eams.vo.AssetVo;
 import org.example.eams.vo.PageResult;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.util.StringUtils;
 
 import java.time.LocalDateTime;
@@ -31,6 +36,7 @@ import java.util.stream.Collectors;
 public class AssetServiceImpl implements AssetService {
 
     private final AssetMapper assetMapper;
+    private final AssetHoldingMapper holdingMapper;
     private final SysUserMapper userMapper;
 
     @Override
@@ -96,6 +102,50 @@ public class AssetServiceImpl implements AssetService {
         assetMapper.updateById(asset);
     }
 
+    @Override
+    public List<AssetVo> myAssets(String username) {
+        SysUser user = findUser(username);
+        List<Asset> assets = assetMapper.selectList(new LambdaQueryWrapper<Asset>()
+                .eq(Asset::getCurrentUserId, user.getId())
+                .eq(Asset::getStatus, AssetStatus.USING)
+                .orderByDesc(Asset::getId));
+        Map<Long, String> userNames = loadUserNames(assets);
+        return assets.stream().map(asset -> toVo(asset, userNames)).toList();
+    }
+
+    @Override
+    @Transactional(rollbackFor = Exception.class)
+    public void returnAsset(Long id, ReturnAssetRequest req, String username, boolean isAdmin) {
+        Asset asset = findAsset(id);
+        SysUser user = findUser(username);
+        if (asset.getStatus() != AssetStatus.USING) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "该资产当前无需归还");
+        }
+        if (!isAdmin && !Objects.equals(asset.getCurrentUserId(), user.getId())) {
+            throw new BusinessException(ErrorCode.FORBIDDEN, "只能归还自己正在使用的资产");
+        }
+
+        int updated = assetMapper.update(null, new com.baomidou.mybatisplus.core.conditions.update.LambdaUpdateWrapper<Asset>()
+                .eq(Asset::getId, id)
+                .eq(Asset::getStatus, AssetStatus.USING)
+                .set(Asset::getStatus, AssetStatus.FREE)
+                .set(Asset::getCurrentUserId, null));
+        if (updated != 1) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "资产状态已变更，请刷新后重试");
+        }
+
+        AssetHolding holding = holdingMapper.selectOne(new LambdaQueryWrapper<AssetHolding>()
+                .eq(AssetHolding::getAssetId, id)
+                .eq(AssetHolding::getStatus, HoldingStatus.ACTIVE));
+        if (holding == null) {
+            throw new BusinessException(ErrorCode.BUSINESS_ERROR, "未找到有效的领用记录");
+        }
+        holding.setStatus(HoldingStatus.RETURNED);
+        holding.setReturnedAt(LocalDateTime.now());
+        holding.setReturnRemark(trimToNull(req.remark()));
+        holdingMapper.updateById(holding);
+    }
+
     private LambdaQueryWrapper<Asset> buildQuery(AssetQuery query) {
         LambdaQueryWrapper<Asset> wrapper = new LambdaQueryWrapper<Asset>()
                 .orderByDesc(Asset::getId);
@@ -143,6 +193,14 @@ public class AssetServiceImpl implements AssetService {
             throw new BusinessException(ErrorCode.NOT_FOUND, "资产不存在");
         }
         return asset;
+    }
+
+    private SysUser findUser(String username) {
+        SysUser user = userMapper.selectByUsername(username);
+        if (user == null) {
+            throw new BusinessException(ErrorCode.UNAUTHORIZED, "用户不存在");
+        }
+        return user;
     }
 
     private Map<Long, String> loadUserNames(Collection<Asset> assets) {

@@ -6,10 +6,12 @@ import org.example.eams.common.Result;
 import org.example.eams.dto.asset.AssetQuery;
 import org.example.eams.dto.asset.AssetSaveRequest;
 import org.example.eams.dto.asset.ScrapAssetRequest;
+import org.example.eams.dto.holding.ReturnAssetRequest;
 import org.example.eams.service.AssetService;
 import org.example.eams.vo.AssetVo;
 import org.example.eams.vo.PageResult;
 import org.springframework.security.access.prepost.PreAuthorize;
+import org.springframework.security.core.Authentication;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,6 +22,8 @@ import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+
+import java.util.List;
 
 @Validated
 @RestController
@@ -37,6 +41,11 @@ public class AssetController {
     @GetMapping("/{id}")
     public Result<AssetVo> getById(@PathVariable Long id) {
         return Result.success(assetService.getById(id));
+    }
+
+    @GetMapping("/my")
+    public Result<List<AssetVo>> myAssets(Authentication authentication) {
+        return Result.success(assetService.myAssets(authentication.getName()));
     }
 
     @PostMapping
@@ -70,6 +79,21 @@ public class AssetController {
     ) {
         assetService.scrap(id, req);
         return Result.success();
+    }
+
+    @PostMapping("/{id}/return")
+    public Result<Void> returnAsset(
+            @PathVariable Long id,
+            @Valid @RequestBody ReturnAssetRequest req,
+            Authentication authentication
+    ) {
+        assetService.returnAsset(id, req, authentication.getName(), isAdmin(authentication));
+        return Result.success();
+    }
+
+    private boolean isAdmin(Authentication authentication) {
+        return authentication.getAuthorities().stream()
+                .anyMatch(authority -> "ROLE_ADMIN".equals(authority.getAuthority()));
     }
 
 }
