@@ -2,11 +2,13 @@ import { createRouter, createWebHistory, type RouteRecordRaw } from 'vue-router'
 import { useAuthStore } from '../stores/auth'
 import { pinia } from '../stores'
 
+
 const MainLayout = () => import('../layouts/MainLayout.vue')
 const LoginView = () => import('../views/auth/LoginView.vue')
 const DashboardView = () => import('../views/dashboard/DashboardView.vue')
 const PlaceholderView = () => import('../views/common/PlaceholderView.vue')
 const NotFoundView = () => import('../views/common/NotFoundView.vue')
+const DepartmentView = () => import('../views/departments/DepartmentView.vue')
 
 const routes: RouteRecordRaw[] = [
   {
@@ -36,7 +38,7 @@ const routes: RouteRecordRaw[] = [
         {
         path: 'departments',
         name: 'departments',
-        component: PlaceholderView,
+        component: DepartmentView,
          props:{title:'部门管理'},
         meta:{title:'部门管理',requiresAuth: true, roles: ['ADMIN']}
       },

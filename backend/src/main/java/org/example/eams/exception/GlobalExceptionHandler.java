@@ -14,6 +14,7 @@ import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
+import org.springframework.dao.DuplicateKeyException;
 
 @RestControllerAdvice
 public class GlobalExceptionHandler {
@@ -53,6 +54,12 @@ public class GlobalExceptionHandler {
                 .body(Result.fail(ErrorCode.BAD_REQUEST));
     }
 
+    @ExceptionHandler(DuplicateKeyException.class)
+    public ResponseEntity<Result<Void>> handleDuplicateKeyException(DuplicateKeyException e) {
+        return ResponseEntity
+                .status(HttpStatus.CONFLICT)
+                .body(Result.fail(ErrorCode.CONFLICT, "数据已存在"));
+    }
 
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Result<Void>> handleSystemException(Exception e) {

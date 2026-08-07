@@ -139,4 +139,12 @@ p {
   margin: 0;
   color: #64748b;
 }
+.login-form {
+  margin-top: 24px;
+}
+
+.submit-button {
+  width: 100%;
+  min-height: 44px;
+}
 </style>

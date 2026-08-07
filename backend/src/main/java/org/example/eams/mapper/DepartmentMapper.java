@@ -1,11 +1,13 @@
 package org.example.eams.mapper;
 
+import com.baomidou.mybatisplus.core.mapper.BaseMapper;
 import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 import org.apache.ibatis.annotations.Select;
+import org.example.eams.entity.SysDepartment;
 
 @Mapper
-public interface DepartmentMapper {
+public interface DepartmentMapper extends BaseMapper<SysDepartment> {
 
     @Select("""
             SELECT name
