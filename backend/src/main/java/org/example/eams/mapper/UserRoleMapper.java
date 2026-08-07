@@ -27,4 +27,11 @@ public interface UserRoleMapper {
             @Param("userId") Long userId,
             @Param("roleId") Long roleId
     );
+
+    @Delete("""
+            DELETE FROM sys_user_role
+            WHERE user_id = #{userId}
+            """)
+    int deleteByUserId(@Param("userId") Long userId);
 }
+import org.apache.ibatis.annotations.Delete;
